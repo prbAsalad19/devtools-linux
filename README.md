@@ -13,7 +13,7 @@ Help integrato: visualizza comandi disponibili direttamente dal terminale.
 
 Clona il repository e compila:
 
-git clone https://github.com/prbAsalad19/devtools.git
+git clone https://github.com/prbAsalad19/devtools-linux.git
 cd devtools
 g++ src/main.cpp -o devtools -std=c++17
 
