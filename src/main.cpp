@@ -7,7 +7,18 @@
 std::string DEVTOOLS_VERSION = "1.0";
 
 std::string HELP_OUT_STR =
-"";
+"DevTools 1.0\n"
+"\n"
+"Commands:\n"
+"  class <name> [flags]\n"
+"  module <name> [flags]\n"
+"  shader <name> [flags]\n"
+"  set_lang [flag]\n"
+"  help\n"
+"  exit\n"
+"\n"
+"Documentation:\n"
+"https://github.com/prbAsalad19/devtools-linux\n";
 
 enum class Language
 {
