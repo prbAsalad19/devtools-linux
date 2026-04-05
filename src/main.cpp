@@ -398,65 +398,79 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
     // ================= shader =================
     else if (commandName == "shader")
     {
-        bool hasV = false;
-        bool hasF = false;
         bool hasXS = false;
         bool hasXSH = false;
+        bool onlyV = false;
+        bool onlyF = false;
 
-        // rileva la presenza delle flag principali
+        std::vector<std::string> otherExts; // per -geom, -comp, -glsl, -sha
+
         for (auto& f : flagsUsed)
         {
-            if (f == "-v") hasV = true;
-            else if (f == "-f") hasF = true;
-            else if (f == "-xs") hasXS = true;
+            if (f == "-xs") hasXS = true;
             else if (f == "-xsh") hasXSH = true;
+            else if (f == "-v") onlyV = true;
+            else if (f == "-f") onlyF = true;
+            else if (f == "-geom") otherExts.push_back("geom");
+            else if (f == "-comp") otherExts.push_back("comp");
+            else if (f == "-glsl") otherExts.push_back("glsl");
+            else if (f == "-sha") otherExts.push_back("sha");
+            else if (f == "-vert") otherExts.push_back("vert");
+            else if (f == "-frag") otherExts.push_back("frag");
         }
 
-        // se non ci sono flag, crea vert e frag di default
-        if (flagsUsed.empty())
+        // default: vert + frag
+        if (!hasXS && !hasXSH && otherExts.empty())
         {
             create_file(optionValue + ".vert");
             create_file(optionValue + ".frag");
             std::cout << "Created: " << optionValue << ".vert and " << optionValue << ".frag\n";
-            return 0;
         }
 
-        for (auto& f : flagsUsed)
+        if (hasXS)
         {
-            if (f == "-v")
+            if (!onlyV && !onlyF)
             {
-                create_file(optionValue + ".vert");
-                std::cout << "Created: " << optionValue << ".vert\n";
+                create_file(optionValue + ".vs");
+                create_file(optionValue + ".fs");
+                std::cout << "Created: " << optionValue << ".vs and " << optionValue << ".fs\n";
             }
-            else if (f == "-f")
+            else if (onlyV)
             {
-                create_file(optionValue + ".frag");
-                std::cout << "Created: " << optionValue << ".frag\n";
+                create_file(optionValue + ".vs");
+                std::cout << "Created: " << optionValue << ".vs\n";
             }
-            else if (f == "-xs")
+            else if (onlyF)
             {
-                if (!hasV && !hasF)
-                {
-                    create_file(optionValue + ".vs");
-                    create_file(optionValue + ".fs");
-                    std::cout << "Created: " << optionValue << ".vs and " << optionValue << ".fs\n";
-                }
+                create_file(optionValue + ".fs");
+                std::cout << "Created: " << optionValue << ".fs\n";
             }
-            else if (f == "-xsh")
+        }
+
+        if (hasXSH)
+        {
+            if (!onlyV && !onlyF)
             {
-                if (!hasV && !hasF)
-                {
-                    create_file(optionValue + ".vsh");
-                    create_file(optionValue + ".fsh");
-                    std::cout << "Created: " << optionValue << ".vsh and " << optionValue << ".fsh\n";
-                }
+                create_file(optionValue + ".vsh");
+                create_file(optionValue + ".fsh");
+                std::cout << "Created: " << optionValue << ".vsh and " << optionValue << ".fsh\n";
             }
-            else
+            else if (onlyV)
             {
-                std::string ext = f.substr(1);
-                create_file(optionValue + "." + ext);
-                std::cout << "Created: " << optionValue << "." << ext << "\n";
+                create_file(optionValue + ".vsh");
+                std::cout << "Created: " << optionValue << ".vsh\n";
             }
+            else if (onlyF)
+            {
+                create_file(optionValue + ".fsh");
+                std::cout << "Created: " << optionValue << ".fsh\n";
+            }
+        }
+
+        for (auto& ext : otherExts)
+        {
+            create_file(optionValue + "." + ext);
+            std::cout << "Created: " << optionValue << "." << ext << "\n";
         }
     }
 
