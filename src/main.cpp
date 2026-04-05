@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <filesystem>
 
 std::string DEVTOOLS_VERSION = "1.0";
 
@@ -362,6 +363,7 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
     else if (commandName == "module")
     {
         std::string base = optionValue + "/";
+        std::filesystem::create_directories(base); // crea la cartella
 
         if (currentLang == Language::Cpp)
         {
@@ -369,27 +371,15 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
             {
                 create_header(base + optionValue + ".h");
                 create_source(base + optionValue + ".cpp");
-
-                std::cout << "Created module: " << optionValue << std::endl;
             }
-
-            for (auto& f : flagsUsed)
+            else
             {
-                if (f == "-h")
+                for (auto& f : flagsUsed)
                 {
-                    create_header(base + optionValue + ".h");
-                }
-                else if (f == "-hpp")
-                {
-                    create_header(base + optionValue + ".hpp");
-                }
-                else if (f == "-c")
-                {
-                    create_source(base + optionValue + ".c");
-                }
-                else if (f == "-cpp")
-                {
-                    create_source(base + optionValue + ".cpp");
+                    if (f == "-h") create_header(base + optionValue + ".h");
+                    else if (f == "-hpp") create_header(base + optionValue + ".hpp");
+                    else if (f == "-c") create_source(base + optionValue + ".c");
+                    else if (f == "-cpp") create_source(base + optionValue + ".cpp");
                 }
             }
         }
@@ -401,6 +391,8 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
         {
             create_file(base + optionValue + ".rs");
         }
+
+        std::cout << "Created module: " << optionValue << std::endl; // stampa sempre
     }
 
     // ================= shader =================
