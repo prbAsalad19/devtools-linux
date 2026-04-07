@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <filesystem>
 
-std::string DEVTOOLS_VERSION = "1.0";
+std::string DEVTOOLS_VERSION = "1.4";
 
 std::string HELP_OUT_STR =
 "DevTools 1.0\n"
