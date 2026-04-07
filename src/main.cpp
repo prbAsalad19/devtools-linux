@@ -41,6 +41,7 @@ std::vector<std::string> commands =
     "shader",
     "module",
     "set_lang",
+    "cd",
     "help",
     "exit"
 };
@@ -88,7 +89,7 @@ struct Token
 std::string get_line()
 {
     std::string command = "";
-    std::cout << ">> ";
+    std::cout << std::filesystem::current_path() << ">> ";
     std::getline(std::cin, command);
     return command;
 }
@@ -496,6 +497,25 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
         {
             currentLang = Language::Rust;
             std::cout << "Language set to rust\n";
+        }
+    }
+
+    else if (commandName == "cd")
+    {   
+        if (optionValue == "")
+        {
+            std::cout << std::filesystem::current_path() << std::endl;
+            return 0;
+        }
+
+        try
+        {
+            std::filesystem::current_path(optionValue);
+            std::cout << "Current dir: " << std::filesystem::current_path() << std::endl;
+        }
+        catch (...)
+        {
+            std::cout << "Directory not found\n";
         }
     }
 
