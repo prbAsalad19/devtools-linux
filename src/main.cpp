@@ -42,6 +42,7 @@ std::vector<std::string> commands =
     "module",
     "set_lang",
     "cd",
+    "clear",
     "help",
     "exit"
 };
@@ -517,6 +518,10 @@ int handle_command(std::vector<Token>& tokens, Language& currentLang, std::strin
         {
             std::cout << "Directory not found\n";
         }
+    }
+    else if (commandName == "clear")
+    {
+        clear_screen();
     }
 
     return 0;
